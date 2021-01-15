@@ -17,4 +17,14 @@ fun Element.getPackageQName() = getPackage().qualifiedName.toString()
 
 fun Element.name() = simpleName.toString()
 
+fun Element.simpleNames(): List<String> {
+    val simpleNames = mutableListOf<String>()
+    var element: Element = this
+    while (element.kind != ElementKind.PACKAGE) {
+        simpleNames.add(element.name())
+        element = element.enclosingElement
+    }
+    return simpleNames.reversed()
+}
+
 fun Element.isPublic() = modifiers.contains(Modifier.PUBLIC)

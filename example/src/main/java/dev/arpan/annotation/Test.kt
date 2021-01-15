@@ -18,13 +18,25 @@ enum class UserRoleIgnoreCase {
     ADMIN
 }
 
-enum class Gender {
-    @Key(value = "male", ignoreCase = true)
-    MALE,
+class Test {
+    enum class Gender {
+        @Key(value = "male", ignoreCase = true)
+        MALE,
 
-    @Key(value = "female")
-    FEMALE,
+        @Key(value = "female")
+        FEMALE,
 
-    @Key(value = "other")
-    OTHER
+        @Key(value = "other")
+        OTHER
+    }
+
+    companion object {
+        enum class UserRole {
+            @Key(value = "User", ignoreCase = true)
+            USER,
+
+            @Key(value = "Admin", ignoreCase = false)
+            ADMIN
+        }
+    }
 }

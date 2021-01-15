@@ -62,7 +62,8 @@ class EnumAnnotationProcessor : AbstractProcessor() {
             }
         enumDataMap.forEach { (typeElement, list) ->
             val isIgnoreCase = list.any { it.key.ignoreCase }
-            val enumClassName = ClassName(typeElement.getPackageQName(), typeElement.name())
+            val enumClassName = ClassName(typeElement.getPackageQName(), typeElement.simpleNames())
+            val outputClassName = typeElement.simpleNames().joinToString(separator = "") + "Converter"
             val companion = TypeSpec.companionObjectBuilder()
                 .addFunction(
                     FunSpec.builder("fromKey")
@@ -105,11 +106,14 @@ class EnumAnnotationProcessor : AbstractProcessor() {
             val generatedAnnotationSpec = AnnotationSpec.builder(GENERATED_ANNOTATION_CLASS_NAME)
                 .addMember("%S", EnumAnnotationProcessor::class.java.canonicalName).build()
 
-            val classTypeSpec = TypeSpec.classBuilder("${typeElement.simpleName}TypeConverter")
+            val classTypeSpec = TypeSpec.classBuilder(outputClassName)
                 .addAnnotation(generatedAnnotationSpec)
                 .addType(companion)
                 .build()
-            val fileSpec = FileSpec.builder(typeElement.getPackageQName(), "${typeElement.name()}TypeConverter")
+            val fileSpec = FileSpec.builder(
+                typeElement.getPackageQName(),
+                outputClassName
+            )
                 .addType(classTypeSpec)
                 .build()
 
