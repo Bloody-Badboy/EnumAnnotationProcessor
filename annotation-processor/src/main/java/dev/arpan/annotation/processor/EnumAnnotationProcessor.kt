@@ -20,6 +20,7 @@ class EnumAnnotationProcessor : AbstractProcessor() {
     companion object {
         private const val KAPT_KOTLIN_GENERATED = "kapt.kotlin.generated"
         private val GENERATED_ANNOTATION_CLASS_NAME = ClassName("javax.annotation.processing", "Generated")
+        private const val OUTPUT_CLASS_SUFFIX = "Converter"
     }
 
     override fun init(processingEnv: ProcessingEnvironment) {
@@ -63,7 +64,7 @@ class EnumAnnotationProcessor : AbstractProcessor() {
         enumDataMap.forEach { (typeElement, list) ->
             val isIgnoreCase = list.any { it.key.ignoreCase }
             val enumClassName = ClassName(typeElement.getPackageQName(), typeElement.simpleNames())
-            val outputClassName = typeElement.simpleNames().joinToString(separator = "") + "Converter"
+            val outputClassName = typeElement.simpleNames().joinToString(separator = "") + OUTPUT_CLASS_SUFFIX
             val companion = TypeSpec.companionObjectBuilder()
                 .addFunction(
                     FunSpec.builder("fromKey")
